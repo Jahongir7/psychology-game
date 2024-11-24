@@ -12,12 +12,14 @@ const App = () => {
   const [message, setMessage] = useState("");
   const [spokenWord, setSpokenWord] = useState("");
   const [recognition, setRecognition] = useState(null);
+  const [score, setScore] = useState(0); // Track the score
+  const [gameOver, setGameOver] = useState(false); // Track game state
 
   useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Your browser does not support Speech Recognition.");
+      alert("Browseringiz mikrofonni qo'llab quvvatlamaydi");
       return;
     }
 
@@ -46,7 +48,8 @@ const App = () => {
     if (
       spokenWord.toLowerCase() === imagesData[currentIndex].name.toLowerCase()
     ) {
-      setMessage("Correct!");
+      setMessage("To'g'ri!");
+      setScore((prevScore) => prevScore + 1); // Increment score for correct answer
     } else {
       setMessage("");
     }
@@ -60,17 +63,18 @@ const App = () => {
         setSpokenWord("");
       } else {
         clearInterval(interval);
-        setMessage("Game Over!");
+        setMessage("O'yin tugadi!");
+        setGameOver(true); // Mark the game as over
       }
-    }, 3500);
+    }, 5500);
 
     return () => clearInterval(interval);
   }, [currentIndex]);
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      <h1>Speech Recognition Game</h1>
-      {currentIndex < imagesData.length && (
+      <h1>Ovoz orqali jismni aniqlash</h1>
+      {!gameOver && currentIndex < imagesData.length && (
         <img
           src={imagesData[currentIndex].src}
           alt={imagesData[currentIndex].name}
@@ -83,13 +87,20 @@ const App = () => {
         />
       )}
       <h2>{message}</h2>
-      <p>
-        Say the name of the object shown in the image:{" "}
-        <b>{imagesData[currentIndex].name}</b>
-      </p>
-      <p>
-        <strong>Your Speech:</strong> {spokenWord}
-      </p>
+      {!gameOver && (
+        <>
+          <p>Rasmda ko'ringan jismni nomini ayting</p>
+          <p>
+            <strong>siz aytgan jism:</strong> {spokenWord}
+          </p>
+        </>
+      )}
+      {gameOver && (
+        <div>
+          <h2>O'yin tugadi!</h2>
+          <h1>Sizning yakuniy ballingiz: <strong>{score}</strong> / {imagesData.length}</h1>
+        </div>
+      )}
     </div>
   );
 };

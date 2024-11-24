@@ -36,26 +36,44 @@ const VegetablesGame = () => {
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {
-        setStep((prevStep) =>
-          prevStep < vegetableComponents.length ? prevStep + 1 : 1
-        );
+        if (step < vegetableComponents.length) {
+          setStep((prevStep) => prevStep + 1);
+          setColor("#ffffff");
+        } else {
+          Swal.fire({
+            icon: "info",
+            title: "Game Over!",
+            text: "You've completed the game!",
+            confirmButtonText: "Restart",
+          }).then(() => {
+            setStep(1);
+            setColor("#ffffff");
+          });
+        }
       });
     } else {
-      // Swal.fire({
-      //   icon: "error",
-      //   title: "Try again!",
-      //   showConfirmButton: false,
-      //   timer: 1500,
-      // });
+      Swal.fire({
+        icon: "error",
+        title: "Iltimos boshqatdan urinib ko'ring.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
   return (
-    <div ref={drop}>
+    <div
+      ref={drop}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        paddingBottom: "300px",
+      }}
+    >
       {CurrentVegetable ? (
         <CurrentVegetable color={color} />
       ) : (
-        <p>Game complete!</p>
+        <h1 style={{color:"white", marginTop: "200px"}}>O'yin tugadi!</h1>
       )}
     </div>
   );

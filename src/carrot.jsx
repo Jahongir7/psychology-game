@@ -15,7 +15,7 @@ const VegetablesGame = () => {
     { component: BeetSVG, correctColor: "red" },
     { component: CabbageSVG, correctColor: "green" },
   ];
-
+  console.log(step);
   const CurrentVegetable = vegetableComponents[step - 1]?.component;
 
   const [{ isOver }, drop] = useDrop(() => ({
@@ -25,7 +25,6 @@ const VegetablesGame = () => {
       isOver: !!monitor.isOver(),
     }),
   }));
-
   const handleDrop = (droppedColor) => {
     setColor(droppedColor);
 
@@ -46,7 +45,7 @@ const VegetablesGame = () => {
             text: "You've completed the game!",
             confirmButtonText: "Restart",
           }).then(() => {
-            setStep(1);
+            setStep((prevStep) => prevStep + 1);
             setColor("#ffffff");
           });
         }
@@ -73,7 +72,7 @@ const VegetablesGame = () => {
       {CurrentVegetable ? (
         <CurrentVegetable color={color} />
       ) : (
-        <h1 style={{color:"white", marginTop: "200px"}}>O'yin tugadi!</h1>
+        <h1 style={{ color: "white", marginTop: "200px" }}>O'yin tugadi!</h1>
       )}
     </div>
   );
